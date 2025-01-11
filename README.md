@@ -12,7 +12,7 @@ This was a long process.
 
 
 ## Solution:
-I created Google Drive API Project in Google Cloud, and developed a python script using pydrive which will follow all the process nd generate the final downloading URL which I just have to paste in my portfolio button link.
+I created Google Drive API Project in Google Cloud, and developed a python script using pydrive which will follow all the process and generate the final downloading URL, which I just have to paste in my portfolio button link.
 I have also added a log file, which will keep track of the latest resume on my google account. This way, the script will not go forward to perform the operations required if my Google Drive already has the most recent version of my resume.
 
 ## Tools Used:
