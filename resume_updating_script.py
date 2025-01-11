@@ -1,5 +1,7 @@
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
+import os
+from datetime import datetime
 
 def authenticate():
     gauth = GoogleAuth()
@@ -35,20 +37,50 @@ def uploading_file(resume_path, file_name, drive):
 
     return upload_resume
 
+def check_last_update(file_path):
+    log_file_name = "resume_upload_logs.txt"
+    log_file = open(log_file_name, "r+")
+    content = log_file.readlines()
+    update_date = os.path.getmtime(file_path)
+    update_date = datetime.fromtimestamp(update_date).strftime('%Y-%m-%d %H:%M:%S')
+
+    if len(content) == 0:
+        log_file.write(f"{update_date}\n")
+        log_file.close()
+        return True
+    
+    else:
+        last_update = content[-1]
+        if last_update != update_date:
+            print("File has been updated since last update")
+            log_file.write(f"{update_date}\n")
+            log_file.close()
+            return True
+        else:
+            log_file.close()
+            return False
+
 
 def main():
     drive = authenticate()
-
-    # Deleting the old Resume from my Drive
     file_name = "Resume_Jaspreet_Singh_Dhami.pdf"  # Change this to your file name
-    deleting_file(file_name,drive)
-
-    # new_resume_path
     resume_path = f"../Final_Job_Search/{file_name}"
-    resume = uploading_file(resume_path, file_name, drive)
 
-    url = f"https://drive.google.com/uc?export=download&id={resume['id']}"
+    # Checking if the file has been updated since last update
+    updated = check_last_update(resume_path)
 
-    print(f"paste this link in the button:\n{url}")
+    if updated:
+        # Deleting the old Resume from my Drive
+        deleting_file(file_name,drive)
+
+        # new_resume_path
+        resume = uploading_file(resume_path, file_name, drive)
+
+        url = f"https://drive.google.com/uc?export=download&id={resume['id']}"
+
+        print(f"paste this link in the button:\n{url}")
+    
+    else:
+        print("File has not been updated since last update")
 
 main()
