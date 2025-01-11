@@ -30,4 +30,12 @@ upload_resume.SetContentFile(resume_path)
 # Upload the file
 upload_resume.Upload()
 
-print(f"File {file_name} uploaded successfully!")
+# updating the file permissions
+upload_resume.InsertPermission({
+    'type': 'anyone',  # "anyone" means anyone with the link
+    'value': 'anyoneWithLink',  # Share with anyone who has the link
+    'role': 'reader'  # Set the role to "reader" (can view)
+})
+
+url = f"https://drive.google.com/uc?export=download&id={upload_resume['id']}"
+
