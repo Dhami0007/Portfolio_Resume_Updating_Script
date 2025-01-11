@@ -45,7 +45,7 @@ def check_last_update(file_path):
     update_date = datetime.fromtimestamp(update_date).strftime('%Y-%m-%d %H:%M:%S')
 
     if len(content) == 0:
-        log_file.write(f"{update_date}\n")
+        log_file.write(f"{update_date};")
         log_file.close()
         return True
     
@@ -53,13 +53,17 @@ def check_last_update(file_path):
         last_update = content[-1]
         if last_update != update_date:
             print("File has been updated since last update")
-            log_file.write(f"{update_date}\n")
+            log_file.write(f"{update_date}  link: ")
             log_file.close()
             return True
         else:
             log_file.close()
             return False
 
+def add_link_to_log(link):
+    file = open("resume_upload_logs.txt", "a")
+    file.write(f"{link}\n")
+    file.close()
 
 def main():
     drive = authenticate()
@@ -79,6 +83,7 @@ def main():
         url = f"https://drive.google.com/uc?export=download&id={resume['id']}"
 
         print(f"paste this link in the button:\n{url}")
+        add_link_to_log(url)
     
     else:
         print("File has not been updated since last update")
